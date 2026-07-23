@@ -20,14 +20,14 @@ Rules enforced:
 """
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-
 import numpy as np
 import pandas as pd
+from pydantic import BaseModel, ConfigDict, Field
 
 
-@dataclass
-class Trade:
+class Trade(BaseModel):
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
     entry_date: pd.Timestamp
     entry_price: float
     exit_date: pd.Timestamp | None = None
@@ -48,11 +48,12 @@ class Trade:
         return (self.exit_price / self.entry_price) - 1.0
 
 
-@dataclass
-class BacktestResult:
+class BacktestResult(BaseModel):
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
     ticker: str
     stop_type: str
-    trades: list[Trade] = field(default_factory=list)
+    trades: list[Trade] = Field(default_factory=list)
     equity_curve: pd.Series | None = None
 
 
